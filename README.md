@@ -13,10 +13,10 @@ The contract value will therefore increase and the source addresses and amounts 
 abort (contract suicide triggered by the bookmaker), everybody will get his amount back.
 
 3. When the outcome is known and is published by the bookmaker, the winning amounts are calculated for everybody who bet for the final outcome. The amount which can be requested/claimed by each winner is calculated as follows:
-    T = total sum of all wagers placed
-    W = sum of wagers placed on the winning outcome
-    Wi = wager placed by bettor i onto the winning outcome
-    Ai = winner amount for bettor i which can be claimed
+    - T = total sum of all wagers placed
+    - W = sum of wagers placed on the winning outcome
+    - Wi = wager placed by bettor i onto the winning outcome
+    - Ai = winner amount for bettor i which can be claimed
 
     Ai = (T - W) * Wi / W
 
