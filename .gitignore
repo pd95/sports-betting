@@ -62,3 +62,6 @@ typings/
 
 # macOS specific
 .DS_Store
+
+# Ignore the build output
+build
