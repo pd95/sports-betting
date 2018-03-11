@@ -6,7 +6,7 @@ Somebody starts a bet event. He becomes the bookmaker of the bet. He specifies t
 When the outcome is known, the bookmaker is publishing the result and the winners are calculated. Each winner will receive back his wager and a percentage relative to his wager of the total remaining amount.
 
 ## Smart contract design
-1. The bookmaker creates the contract, specifing the outcomes and the duration/ending time. The contract amount is 0.
+1. The bookmaker creates the contract, specifies the outcomes and the duration/ending time. The contract amount is 0.
 
 2. Up to the end date everybody can place a wager of an arbitrary amount against any outcome. It is also allowed to place multiple bets for multiple outcomes.
 The contract value will therefore increase and the source addresses and amounts are kept in an array. In case of an
