@@ -3,9 +3,11 @@ pragma solidity ^0.4.4;
 import '../node_modules/zeppelin-solidity/contracts/ownership/Ownable.sol';
 import '../node_modules/zeppelin-solidity/contracts/payment/PullPayment.sol';
 import '../node_modules/zeppelin-solidity/contracts/math/Math.sol';
+import '../node_modules/zeppelin-solidity/contracts/math/SafeMath.sol';
 
 
 contract SportsBet is Ownable, PullPayment {
+  using SafeMath for uint;
 
   uint constant MAX_UINT = 2**256 - 1;
 
@@ -35,7 +37,7 @@ contract SportsBet is Ownable, PullPayment {
         amount: 0
       }));
     }
-    endTime = now + betDuration;
+    endTime = now.add(betDuration);
     winningOutcome = MAX_UINT;
   }
 
@@ -51,23 +53,24 @@ contract SportsBet is Ownable, PullPayment {
 
   // Returns the remaining time (in seconds)
   function remainingTime() public view returns (uint) {
-    uint rest = endTime-now;
-    return rest > 0 ? rest : 0;
+    return endTime > now ? endTime-now : 0;
   }
 
   // Function to place a wager to an outcome
   function placeWager(uint outcome) public payable {
-    require(outcome >= 0 && outcome <= outcomes.length);
+    require(outcome >= 0 && outcome < outcomes.length);
     require(msg.value > 0);
     require(remainingTime() > 0);
 
-    outcomes[outcome].amount += msg.value;
+    outcomes[outcome].amount = outcomes[outcome].amount.add(msg.value);
     outcomes[outcome].bettors[outcomes[outcome].betCount] = Bettor({addr: msg.sender, amount: msg.value});
     outcomes[outcome].betCount++;
   }
 
   // Function called by the bookmaker to publish the winning outcome
   function setWinningOutcome(uint outcome) public onlyOwner {
+    require(winningOutcome == MAX_UINT);
+
     // early end of betting? 
     if (now <= endTime) {
       endTime = now;
@@ -84,19 +87,19 @@ contract SportsBet is Ownable, PullPayment {
     // loop over all contributions and sum up the amounts
     for (uint i = 0; i < outcomes.length; i++) {
       if (i == winningOutcome) {
-        winningAmount += outcomes[i].amount;
+        winningAmount = winningAmount.add(outcomes[i].amount);
       }
     }
 
     // Distribute the amount according to the winning bettors amounts:
-    uint distributableAmount = totalAmount - winningAmount;
+    uint distributableAmount = totalAmount.sub(winningAmount);
     for (uint j = 0; j < outcomes[winningOutcome].betCount; j++) {
       Bettor storage bettor = outcomes[winningOutcome].bettors[j];
-      uint additionalAmount = distributableAmount * bettor.amount / winningAmount;
-      uint sendingAmount = bettor.amount + additionalAmount;
+      uint additionalAmount = distributableAmount.mul(bettor.amount).div(winningAmount);
+      uint sendingAmount = bettor.amount.add(additionalAmount);
       asyncSend(bettor.addr, sendingAmount);
 
-      totalAmount -= sendingAmount;
+      totalAmount = totalAmount.sub(sendingAmount);
     }
 
     // Make sure we have properly calculated everything
