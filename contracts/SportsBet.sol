@@ -61,9 +61,9 @@ contract SportsBet is Ownable, PullPayment {
     require(msg.value > 0);
     require(remainingTime() > 0);
 
-    outcomes[outcome].betCount++;
     outcomes[outcome].amount += msg.value;
     outcomes[outcome].bettors[outcomes[outcome].betCount] = Bettor({addr: msg.sender, amount: msg.value});
+    outcomes[outcome].betCount++;
   }
 
   // Function called by the bookmaker to publish the winning outcome
