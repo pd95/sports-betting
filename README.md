@@ -24,3 +24,46 @@ abort (contract suicide triggered by the bookmaker), everybody will get his amou
 * [Solidity](https://solidity.readthedocs.io/) as the smart contract language
 * [Truffle framework](http://truffleframework.com) as the development framework and tooling
 * [OpenZeppelin](https://openzeppelin.org) as the base library for secure smart contract functionality and as a place to learn about smart contract development
+
+
+## Interacting / testing
+1. Start Ganache
+
+2. `truffle compile`
+
+3. `truffle migrate`
+
+4. `truffle develop` and use the console to run the following commands:
+```javascript
+// Show remaining time
+SportsBet.deployed().then(function(inst) { return inst.remainingTime(); }).then(function(val){ return val.toNumber();})
+
+// Place bets:
+SportsBet.deployed().then(function(inst) { return inst.placeWager(0,{from:web3.eth.accounts[0], value:500}); })
+SportsBet.deployed().then(function(inst) { return inst.placeWager(1,{from:web3.eth.accounts[1], value:100}); })
+SportsBet.deployed().then(function(inst) { return inst.placeWager(2,{from:web3.eth.accounts[2], value:900}); })
+
+// Check balance of contract:
+web3.eth.getBalance(SportsBet.address).toNumber()
+
+// Publish result
+SportsBet.deployed().then(function(inst) { return inst.setWinningOutcome(2,{from:web3.eth.accounts[0]}); })
+
+// Verify that the result is set
+SportsBet.deployed().then(function(inst) { return inst.winningOutcome.call();}).then(function(val){ return val.toNumber();})
+
+// Everybody tries to claim his profit:
+SportsBet.deployed().then(function(inst) { return inst.claimProfit({from:web3.eth.accounts[0]}); })
+SportsBet.deployed().then(function(inst) { return inst.claimProfit({from:web3.eth.accounts[1]}); })
+SportsBet.deployed().then(function(inst) { return inst.claimProfit({from:web3.eth.accounts[2]}); })
+
+// Calculate winning amounts
+SportsBet.deployed().then(function(inst) { return inst.calculateWinningAmounts({from:web3.eth.accounts[0], gas:5000000});})
+
+// Retry to claim profit:
+SportsBet.deployed().then(function(inst) { return inst.claimProfit({from:web3.eth.accounts[0]}); })
+SportsBet.deployed().then(function(inst) { return inst.claimProfit({from:web3.eth.accounts[1]}); })
+SportsBet.deployed().then(function(inst) { return inst.claimProfit({from:web3.eth.accounts[2]}); })
+```
+
+5. Use `migrate --reset` in the console to rerun the migration and create a new contract.
