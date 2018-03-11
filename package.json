@@ -1,0 +1,26 @@
+{
+  "name": "sports-betting",
+  "version": "1.0.0",
+  "description": "## Scenario Implement a simple betting system as it is common in  [sports betting]( https://en.wikipedia.org/wiki/Sports_betting). Somebody starts a bet event. He becomes the bookmaker of the bet. He specifies the possible event outcomes to which others can place a wager (paid up-front). He also places a time limit until which bets are accepted. When the outcome is known, the bookmaker is publishing the result and the winners are calculated. Each winner will receive back his wager and a percentage relative to his wager of the total remaining amount.",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pd81999/sports-betting.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pd81999/sports-betting/issues"
+  },
+  "homepage": "https://github.com/pd81999/sports-betting#readme",
+  "dependencies": {
+    "zeppelin-solidity": "1.7.0"
+  }
+}
