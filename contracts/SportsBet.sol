@@ -56,6 +56,11 @@ contract SportsBet is Ownable, PullPayment {
     return endTime > now ? endTime-now : 0;
   }
 
+  // returns the number of possible outcomes
+  function getOutcomeCount() public constant returns (uint) {
+    return outcomes.length;
+  }
+
   // Function to place a wager to an outcome
   function placeWager(uint outcome) public payable {
     require(outcome >= 0 && outcome < outcomes.length);
